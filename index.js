@@ -24,39 +24,41 @@ app.get('/*',function(req,res){
 		res.setHeader('Content-Type', 'application/json');
 		try{
 			if(param.includes('%20')){
+				var MonthNumber = 0;
 				var segments = param.split('%20')
-		
 				var paramDay = segments[1].substring(0,segments.length-1)
-				
 				var paramMonth = segments[0].substring(1,segments[0].length)
 				monthNames.map(function(month,index){
 					if(paramMonth.toUpperCase()===month.toUpperCase()){
-						paramMonth=index
+						MonthNumber=index
+						
 					}
+					
 				})
+
 				var paramYear = segments[2]
 				
-				var newdate = new Date(paramYear,paramMonth,paramDay,0,0,0,0)
-				console.log(newdate)
+				var newdate = new Date(paramYear,MonthNumber,paramDay,0,0,0,0)
+				
 
 
 				if(typeof newdate!=undefined && newdate!=null){
 					res.send(JSON.stringify(
 						{unix:newdate.getTime(),
-						naturaldate:monthNames[paramMonth]+" "+paramDay+", "+
+						naturaldate:monthNames[MonthNumber]+" "+paramDay+", "+
 								paramYear}))	
 				}
 			}else{
 				param = param.substring(1,param.length)
-				console.log(param)
-				var newdate = new Date(param)
-				//zekans
+				var newdate = new Date(parseInt(param))
+
 				
 				
 				console.log(newdate.toString("MM dd"))
+				console.log(newdate.getYear())
 				res.send(JSON.stringify(
 						{unix:newdate.getTime(),
-						naturaldate:monthNames[newdate.getMonth()]+" "+newdate.getDay()+", "+
+						naturaldate:monthNames[newdate.getMonth()]+" "+newdate.getDate()+", "+
 								newdate.getYear()}))
 			}
 		
@@ -69,4 +71,5 @@ app.get('/*',function(req,res){
 	
 })
 app.listen(process.env.PORT || 5000)
+
 
